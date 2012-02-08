@@ -1,0 +1,45 @@
+Manifest-Version: 1.0
+Created-By: 1.0 (Android)
+
+Name: res/layout/text.xml
+SHA1-Digest: vJiQ8DQyzIZwg9TnwFp8rhBNe0M=
+
+Name: res/drawable-mdpi/rbutton_on.9.png
+SHA1-Digest: wIEB3+68maR+pX5vDFepnI4N2/8=
+
+Name: res/drawable-mdpi/fbutton_off.9.png
+SHA1-Digest: /ADsfNFBiROTGwF9wym1xY7fdrc=
+
+Name: resources.arsc
+SHA1-Digest: piXipAmElEauzW87hmBHZyCOimM=
+
+Name: res/drawable-mdpi/rbutton.xml
+SHA1-Digest: eYgYP8CrkIAP+fn9e+JrybUapD0=
+
+Name: res/drawable-mdpi/rbutton_off.9.png
+SHA1-Digest: 60fP7DdaWrHScB8+TTG/M7JLNmE=
+
+Name: classes.dex
+SHA1-Digest: uqXe+KcEET6c9ghoWhvleqFA994=
+
+Name: AndroidManifest.xml
+SHA1-Digest: tAkUpiWGQx+I85zUtjWt6OWQOEc=
+
+Name: res/drawable-ldpi/icon.png
+SHA1-Digest: isgro8jrelnVRiyZpo8tfAUBdNY=
+
+Name: res/drawable-mdpi/button.xml
+SHA1-Digest: VyimkycVIL1eHyGVpkoabLkLQwU=
+
+Name: res/drawable-mdpi/icon.png
+SHA1-Digest: QRMdGdjAiU0qIzqdmEo4Ubw9scE=
+
+Name: assets/uni05_64.ttf
+SHA1-Digest: h12vMCZ/fNi7xwzOlPhBQ86Vmk8=
+
+Name: res/drawable-hdpi/icon.png
+SHA1-Digest: Ahjv7BjDy409gXCvpjXmmAeyZIs=
+
+Name: res/drawable-mdpi/fbutton_on.9.png
+SHA1-Digest: LLS/zoM/v10O6JIBun5hyPXkMso=
+

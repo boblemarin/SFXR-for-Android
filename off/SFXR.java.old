@@ -1,0 +1,247 @@
+package be.minimal.sfxr;
+
+import android.app.Activity;
+import android.media.AudioFormat;
+import android.media.AudioManager;
+import android.media.AudioTrack;
+import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+
+public class SFXR extends Activity implements OnClickListener {
+	
+	private final int RND_FRM = 1;
+	private final String[] RND_VAL = { "pickup/coin", "laser/shoot", "explosion", "powerup", "hit/hurt", "jump", "blip/select" };
+	
+	private SFXRData sfxr;
+	private Boolean must_play = true;
+	private Button[] ids;
+	
+    /** Called when the activity is first created. */
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        this.getWindow().setFlags( WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN );
+
+        setContentView(R.layout.main);
+        /*
+      	// poru quand on veut des tabs
+        setContentView(R.layout.test);
+        final TabHost mTabHost = getTabHost();
+        mTabHost.addTab(mTabHost.newTabSpec("tab1").setIndicator("RANDOM").setContent(R.id.tab1));
+        mTabHost.addTab(mTabHost.newTabSpec("tab1").setIndicator("PARAMS").setContent(R.id.tab2));
+        mTabHost.setCurrentTab(0);
+        */
+        
+        sfxr = new SFXRData( (int) System.currentTimeMillis());
+        sfxr.randomize();
+        sfxr.playing_sample = false;
+        
+        ids = new Button[RND_VAL.length];
+        
+        Button b;
+
+        // randomize
+        b = (Button) findViewById(R.id.btnRnd);
+        b.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+            	sfxr.playing_sample = false;
+            	//sfxr.resetParams();
+            	sfxr.randomize();
+            	sfxr.resetSample(false);
+            	sfxr.playing_sample = true;
+               //sfxr.
+               /*
+            	sfxr = new SFXRData( (int) System.currentTimeMillis());
+                sfxr.randomize();
+                */
+            }
+        });
+        
+        // random from
+        //{ "pickup/coin", "laser/shoot", "explosion", "powerup", "hit/hurt", "jump", "blip/select" };
+        b = (Button) findViewById(R.id.btnRndCoin);
+        ids[0]=b;
+        b.setOnClickListener(this);
+        b = (Button) findViewById(R.id.btnRndShoot);
+        ids[1]=b;
+        b.setOnClickListener(this);
+        b = (Button) findViewById(R.id.btnRndExplose);
+        ids[2]=b;
+        b.setOnClickListener(this);
+        b = (Button) findViewById(R.id.btnRndPowerUp);
+        ids[3]=b;
+        b.setOnClickListener(this);
+        b = (Button) findViewById(R.id.btnRndHitHurt);
+        ids[4]=b;
+        b.setOnClickListener(this);
+        b = (Button) findViewById(R.id.btnRndJump);
+        ids[5]=b;
+        b.setOnClickListener(this);
+        b = (Button) findViewById(R.id.btnRndBlip);
+        ids[6]=b;
+        b.setOnClickListener(this);
+        /*
+        Button(findViewById(R.id.btnRndShoot)).setOnClickListener(this);
+        Button(findViewById(R.id.btnRndExplose)).setOnClickListener(this);
+        Button(findViewById(R.id.btnRndPowerUp)).setOnClickListener(this);
+        Button(findViewById(R.id.btnRndHitHurt)).setOnClickListener(this);
+        Button(findViewById(R.id.btnRndJump)).setOnClickListener(this);
+        Button(findViewById(R.id.btnRndBlip)).setOnClickListener(this);
+        */
+        /*
+        // random from
+        b = (Button) findViewById(R.id.btnRndFrom);
+        b.setOnClickListener(new OnClickListener() {
+        	public void onClick(View v) {
+        		//sfxr.random(1);
+        		showDialog(RND_FRM);
+        	}
+        });
+        */
+        // mutate
+        b = (Button) findViewById(R.id.btnMut);
+        b.setOnClickListener(new OnClickListener() {
+        	public void onClick(View v) {
+            	sfxr.playing_sample = false;
+            	sfxr.resetSample(false);
+        		sfxr.mutate();
+            	sfxr.playing_sample = true;
+        	}
+        });
+        // replay
+        b = (Button) findViewById(R.id.btnPlay);
+        b.setOnClickListener(new OnClickListener() {
+        	public void onClick(View v) {
+            	sfxr.playing_sample = false;
+        		sfxr.resetSample(false);
+            	sfxr.playing_sample = true;
+        		//sfxr.
+        		//sfxr.playing_sample = true;
+        	}
+        });
+        
+        // start sound thread
+        new Thread( new Runnable( ) 
+        {
+           public void run( )
+           {        		
+        	   AndroidAudioDevice device = new AndroidAudioDevice( );
+              double samples[] = new double[2048];
+   
+              while( must_play )
+              {
+                 for( int i = 0; i < samples.length; i++ )
+                 {
+                	 samples[i] = sfxr.synthSample();
+                 }
+   
+                 device.writeSamples( samples );
+              }        	
+           }
+        } ).start();
+    }
+    
+    // { "pickup/coin", "laser/shoot", "explosion", "powerup", "hit/hurt", "jump", "blip/select" };
+    public void onClick(View view) {
+    	/*
+    	switch( view.getId() )
+    	{
+	    	case (R.id.btnRndCoin) :
+	    		randomFrom(0);
+	    		break;
+	    	case ( R.id.btnRndShoot)
+    		
+    	}
+    	*/
+    	
+    	for( int i = 0; i < ids.length; i++ )
+    	{
+    		if ( view == ids[i] )
+    		{
+    			randomFrom(i);
+    			break;
+    		}
+    	}
+    }
+    
+    private void randomFrom( int which )
+    {
+    	sfxr.playing_sample = false;
+    	sfxr.resetParams();
+       sfxr.random(which);
+       sfxr.resetSample(false);
+    	sfxr.playing_sample = true;
+    }
+    
+    @Override
+    protected void onDestroy()
+    {
+    	must_play = false;
+    	super.onDestroy();
+    }
+    
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+    	return true;
+    	/*
+        //Handle the back button
+        if(keyCode == KeyEvent.KEYCODE_BACK) {
+            //Ask the user if they want to quit
+            new AlertDialog.Builder(this)
+            .setTitle("QUIT ?")
+            .setMessage("You sure ?")
+            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    //Stop the activity
+                    MediaBrowser.this.finish();    
+                }
+            })
+            .setNegativeButton("No", null)
+            .show();
+
+            return true;
+        }
+        else {
+            return super.onKeyDown(keyCode, event);
+        }
+*/
+    }
+    
+    public class AndroidAudioDevice
+    {
+       AudioTrack track;
+       short[] buffer = new short[2048];
+     
+       public AndroidAudioDevice( )
+       {
+          int minSize =AudioTrack.getMinBufferSize( 44100, AudioFormat.CHANNEL_CONFIGURATION_MONO, AudioFormat.ENCODING_PCM_16BIT );        
+          track = new AudioTrack( AudioManager.STREAM_MUSIC, 44100, 
+                                            AudioFormat.CHANNEL_CONFIGURATION_MONO, AudioFormat.ENCODING_PCM_16BIT, 
+                                            minSize, AudioTrack.MODE_STREAM);
+          track.play();        
+       }	   
+     
+       public void writeSamples(double[] samples) 
+       {	
+          fillBuffer( samples );
+          track.write( buffer, 0, samples.length );
+       }
+     
+       private void fillBuffer( double[] samples )
+       {
+          if( buffer.length < samples.length )
+             buffer = new short[samples.length];
+     
+          for( int i = 0; i < samples.length; i++ )
+             buffer[i] = (short)(samples[i] * Short.MAX_VALUE);;
+       }		
+    }
+}

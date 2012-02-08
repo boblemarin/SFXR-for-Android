@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent"
+  android:orientation="vertical">
+  <TextView
+  	android:layout_width="fill_parent"
+  	android:layout_height="wrap_content"
+  	android:text="push"
+  	android:id="@+id/debug"/>
+  <LinearLayout
+  	android:layout_width="fill_parent"
+  	android:layout_height="wrap_content"
+  	android:layout_weight="1">
+<ImageButton android:text="PICKUP/COIN" android:src="@drawable/coin" android:id="@+id/btnRndCoin" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="1"/>
+<ImageButton android:text="LASER/SHOOT" android:src="@drawable/shell" android:id="@+id/btnRndShoot" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="1"/>
+</LinearLayout>
+  <LinearLayout
+  	android:layout_width="fill_parent"
+  	android:layout_height="wrap_content"
+  	android:layout_weight="1">
+<ImageButton android:text="EXPLOSION" android:src="@drawable/bomb" android:id="@+id/btnRndExplose" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="1"/>
+<ImageButton android:text="POWER-UP" android:src="@drawable/powerup" android:id="@+id/btnRndPowerUp" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="1"/>
+<ImageButton android:text="BLIP/SELECT" android:src="@drawable/key" android:id="@+id/btnRndBlip" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="1"/>
+</LinearLayout>
+  <LinearLayout
+  	android:layout_width="fill_parent"
+  	android:layout_height="wrap_content"
+  	android:layout_weight="1">
+<ImageButton android:text="HIT/HURT" android:src="@drawable/explode" android:id="@+id/btnRndHitHurt" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="1"/>
+<ImageButton android:text="JUMP" android:src="@drawable/ship" android:id="@+id/btnRndJump" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="1"/>
+</LinearLayout>
+
+<View
+android:layout_height="15px"
+android:layout_width="fill_parent"
+android:background="#000000" />
+
+ <LinearLayout
+  	android:layout_width="fill_parent"
+  	android:layout_height="wrap_content"
+  	android:layout_weight="1">
+<Button android:text="RANDOMIZE" android:id="@+id/btnRnd" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="1"></Button>
+<Button android:text="MUTATE" android:id="@+id/btnMut" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="1"></Button>
+<Button android:text="REPLAY" android:id="@+id/btnPlay" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="1"></Button>
+</LinearLayout>
+
+</LinearLayout>

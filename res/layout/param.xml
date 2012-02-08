@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+  android:layout_height="wrap_content"
+  android:orientation="vertical"
+  android:paddingLeft="0px"
+  android:paddingRight="0px"
+  android:paddingTop="0px"
+  android:paddingBottom="0px">
+  
+<TextView 
+android:text="Parameter" 
+android:typeface="monospace" 
+android:focusable="false" 
+android:focusableInTouchMode="false" 
+android:textStyle="bold" 
+android:id="@+id/pname" 
+android:layout_width="fill_parent" 
+android:layout_height="wrap_content"
+  android:paddingLeft="0px"
+  android:paddingRight="0px"
+  android:paddingTop="30px"
+  android:paddingBottom="30px">
+</TextView>
+
+<!-- <SeekBar android:id="@+id/pvalue" android:focusable="false" android:focusableInTouchMode="false" android:clickable="false" android:thumb="@drawable/empty" android:progressBarStyle="@drawable/progress_horizontal" android:typeface="monospace" android:textStyle="bold" android:layout_width="fill_parent" android:layout_height="wrap_content" android:progress="200" android:max="400"></SeekBar> -->
+<!-- android:thumb="@drawable/rbutton" android:thumbOffset="0px"  android:background="@drawable/button" android:progressDrawable="@drawable/empty"  -->
+
+
+</LinearLayout>

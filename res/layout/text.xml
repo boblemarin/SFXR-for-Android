@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent"
+  android:orientation="vertical">
+  <LinearLayout
+  	android:layout_width="fill_parent"
+  	android:layout_height="wrap_content"
+  	android:layout_weight="2">
+<Button android:text="PICKUP\n/COIN" android:background="@drawable/button" android:typeface="monospace" android:textColor="#fbefac" android:textStyle="bold" android:id="@+id/btnRndCoin" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="1"/>
+<Button android:text="LASER\nSHOOT" android:background="@drawable/button" android:typeface="monospace" android:textColor="#fbefac" android:textStyle="bold" android:id="@+id/btnRndShoot" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="1"/>
+</LinearLayout>
+  <LinearLayout
+  	android:layout_width="fill_parent"
+  	android:layout_height="wrap_content"
+  	android:layout_weight="2">
+<Button android:text="BOOM" android:background="@drawable/button" android:typeface="monospace" android:textColor="#fbefac" android:textStyle="bold" android:id="@+id/btnRndExplose" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="1"/>
+<Button android:text="POW\n-R-\nUP" android:background="@drawable/button" android:typeface="monospace" android:textColor="#fbefac" android:textStyle="bold" android:id="@+id/btnRndPowerUp" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="1"/>
+<Button android:text="BLIP" android:background="@drawable/button" android:typeface="monospace" android:textColor="#fbefac" android:textStyle="bold" android:id="@+id/btnRndBlip" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="1"/>
+</LinearLayout>
+  <LinearLayout
+  	android:layout_width="fill_parent"
+  	android:layout_height="wrap_content"
+  	android:layout_weight="2">
+<Button android:text="HIT/\nHURT" android:background="@drawable/button" android:typeface="monospace" android:textColor="#fbefac" android:textStyle="bold" android:id="@+id/btnRndHitHurt" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="1"/>
+<Button android:text="JUMP" android:background="@drawable/button" android:typeface="monospace" android:textColor="#fbefac" android:textStyle="bold" android:id="@+id/btnRndJump" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="1"/>
+</LinearLayout>
+
+<View
+android:layout_height="15px"
+android:layout_width="fill_parent"
+android:background="#000000" />
+
+ <LinearLayout
+  	android:layout_width="fill_parent"
+  	android:layout_height="wrap_content"
+  	android:layout_weight="1">
+<Button android:text="RAN\nDOM" android:background="@drawable/rbutton" android:typeface="monospace" android:textColor="#adffd9" android:textStyle="bold" android:id="@+id/btnRnd" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="1"></Button>
+<Button android:text="MUT\nATE" android:background="@drawable/rbutton" android:typeface="monospace" android:textColor="#adffd9" android:textStyle="bold" android:id="@+id/btnMut" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="1"></Button>
+<Button android:text="RE\nPLAY" android:background="@drawable/rbutton" android:typeface="monospace" android:textColor="#adffd9" android:textStyle="bold" android:id="@+id/btnPlay" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="1"></Button>
+</LinearLayout>
+
+</LinearLayout>

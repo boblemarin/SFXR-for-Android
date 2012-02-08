@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">SFXR for ANDROID</string>
+    <string name="app_name">SFXR</string>
+	<string name="randomize">Randomize</string>
+	<string name="randomfrom">Random from...</string>
+	<string name="mutate">Mutate</string>
+	<string name="replay">REPLAY</string>
+</resources>

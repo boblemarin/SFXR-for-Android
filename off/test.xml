@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TabHost
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@android:id/tabhost"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent">
+
+	<LinearLayout
+		android:orientation="vertical"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent">
+	  	
+	  	<TabWidget
+	  		android:id="@android:id/tabs"
+	  		android:layout_width="fill_parent"
+	  		android:layout_height="wrap_content"/>
+	  	
+	  	<FrameLayout
+			android:id="@android:id/tabcontent"
+			android:layout_width="fill_parent"
+			android:layout_height="fill_parent">
+			
+			<LinearLayout
+				android:id="@+id/tab1"
+				android:layout_width="fill_parent"
+				android:layout_height="fill_parent"
+				android:orientation="vertical">
+				  <LinearLayout
+				  	android:layout_width="fill_parent"
+				  	android:layout_height="wrap_content"
+				  	android:layout_weight="1">
+				<Button android:text="PICKUP/COIN" android:id="@+id/btnRndCoin" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="1"></Button>
+				<Button android:text="LASER/SHOOT" android:id="@+id/btnRndShoot" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="1"></Button>
+				</LinearLayout>
+				  <LinearLayout
+				  	android:layout_width="fill_parent"
+				  	android:layout_height="wrap_content"
+				  	android:layout_weight="1">
+				<Button android:text="EXPLOSION" android:id="@+id/btnRndExplose" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="1"></Button>
+				<Button android:text="POWER-UP" android:id="@+id/btnRndPowerUp" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="1"></Button>
+				<Button android:text="BLIP/SELECT" android:id="@+id/btnRndBlip" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="1"></Button>
+				</LinearLayout>
+				  <LinearLayout
+				  	android:layout_width="fill_parent"
+				  	android:layout_height="wrap_content"
+				  	android:layout_weight="1">
+				<Button android:text="HIT/HURT" android:id="@+id/btnRndHitHurt" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="1"></Button>
+				<Button android:text="JUMP" android:id="@+id/btnRndJump" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="1"></Button>
+				</LinearLayout>
+				
+				<View
+				android:layout_height="15px"
+				android:layout_width="fill_parent"
+				android:background="#000000" />
+				
+				<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+				    android:orientation="horizontal"
+				    android:layout_width="fill_parent"
+				    android:layout_height="wrap_content"
+				    android.layout_weight="1"
+				    >
+				<Button android:text="RANDOMIZE" android:id="@+id/btnRnd" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="1"></Button>
+				<Button android:text="MUTATE" android:id="@+id/btnMut" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="1"></Button>
+				<Button android:text="REPLAY" android:id="@+id/btnPlay" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="1"></Button>
+				</LinearLayout>
+				
+				</LinearLayout>
+			
+				<Button
+					android:id="@+id/tab2"
+				android:layout_width="fill_parent"
+				android:layout_height="fill_parent"
+				android:text="YO !\nRAP"/>
+				
+			
+		</FrameLayout>
+	  	
+	</LinearLayout>
+	
+  
+  
+</TabHost>
+
+
