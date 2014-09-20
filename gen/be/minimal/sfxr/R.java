@@ -34,19 +34,21 @@ public final class R {
         public static final int rbutton_on=0x7f02000e;
     }
     public static final class id {
-        public static final int btnMut=0x7f06000a;
-        public static final int btnPlay=0x7f06000b;
-        public static final int btnRnd=0x7f060009;
-        public static final int btnRndBlip=0x7f060005;
-        public static final int btnRndCoin=0x7f060001;
-        public static final int btnRndExplose=0x7f060003;
+        public static final int btnEdit=0x7f06000d;
+        public static final int btnMut=0x7f06000b;
+        public static final int btnPlay=0x7f06000c;
+        public static final int btnRnd=0x7f060008;
+        public static final int btnRndBlip=0x7f060003;
+        public static final int btnRndCoin=0x7f060004;
+        public static final int btnRndExplose=0x7f060001;
         public static final int btnRndHitHurt=0x7f060006;
         public static final int btnRndJump=0x7f060007;
-        public static final int btnRndPowerUp=0x7f060004;
-        public static final int btnRndShoot=0x7f060002;
+        public static final int btnRndPowerUp=0x7f060002;
+        public static final int btnRndShoot=0x7f060005;
+        public static final int btnSaveFile=0x7f06000a;
         public static final int flipper=0x7f060000;
-        public static final int paramList=0x7f060008;
-        public static final int pname=0x7f06000c;
+        public static final int paramList=0x7f060009;
+        public static final int pname=0x7f06000e;
     }
     public static final class layout {
         public static final int list=0x7f030000;

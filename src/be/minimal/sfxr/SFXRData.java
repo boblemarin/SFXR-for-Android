@@ -88,7 +88,6 @@ public class SFXRData {
 		resetParams();
 		resetSample(false);
 		playing_sample = true;
-		Log.e("SFXR", "here i come !");
 	}
 
 	public int clampInt(double x, int a, int b) {

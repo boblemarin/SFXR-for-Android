@@ -1,19 +1,29 @@
 package be.minimal.sfxr;
 
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.DashPathEffect;
 import android.graphics.Paint;
-import android.graphics.Typeface;
 import android.graphics.PorterDuff.Mode;
+import android.graphics.Typeface;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.Shape;
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -21,9 +31,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.View.OnTouchListener;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -40,6 +50,7 @@ public class SFXR extends Activity implements OnTouchListener {
 	
 	private SFXRData sfxr;
 	private Boolean must_play;
+	private Boolean rendering;
 	private Typeface tf;
 	private Boolean superSampling = true;
 	
@@ -55,6 +66,7 @@ public class SFXR extends Activity implements OnTouchListener {
     
     private ViewFlipper vf;
 	private ParamLayout[] pls;
+	private ProgressDialog pd;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -83,11 +95,12 @@ public class SFXR extends Activity implements OnTouchListener {
         tune( R.id.btnRndJump, tl );
         tune( R.id.btnRndPowerUp, tl );
         tune( R.id.btnRndShoot, tl );
+        tune( R.id.btnEdit, tl );
         
         // POPULATE PARAMETERS LIST
         mList = (LinearLayout) findViewById(R.id.paramList);
         mList.setPadding( 10, 0, 80, 0);
-        
+        /*
         final Shape border = new Shape() {
 			
     		final Paint borderPaint = new Paint();
@@ -107,6 +120,7 @@ public class SFXR extends Activity implements OnTouchListener {
     	final ShapeDrawable borderDrawable = new ShapeDrawable( border );
     	
     	mList.setBackgroundDrawable( borderDrawable );
+        */
         
         TextView tv;
         //boolean odd = true;
@@ -117,6 +131,17 @@ public class SFXR extends Activity implements OnTouchListener {
         pls = new ParamLayout[24];
         //ShapeDrawable sd;
         
+        Button save = (Button) findViewById(R.id.btnSaveFile);
+        save.setTypeface(tf);
+        save.setOnTouchListener( new OnTouchListener() {
+			
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				saveToFile(event);
+				return false;
+			}
+		});
+        
         OnTouchListener otl = new OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
@@ -126,14 +151,9 @@ public class SFXR extends Activity implements OnTouchListener {
 				if ( val > 1 ) val = 1f;
 				//val = val*2f-1f;
 				
-				
 				pl.setValue(val);
 				setParam( pl.getParamID() , val );
 				
-				//v.getBackground().setBounds( 0, 15, (int)(v.getWidth()*val), v.getHeight()-30 );
-				//v.invalidate();
-				
-				//setParam( params.get(v) , val );
 				return true;
 			}
 		};
@@ -330,6 +350,7 @@ public class SFXR extends Activity implements OnTouchListener {
     {
     	super.onStart();
     	must_play = true;
+		rendering = false;
         // start sound thread
     	Thread background = new Thread( new Runnable( ) 
         {
@@ -342,10 +363,12 @@ public class SFXR extends Activity implements OnTouchListener {
               {
             	 // if ( superSampling )
             	  //{
+            	  	if ( !rendering ) {
             		  for( int i = 0; i < samples.length; i++ )
                       {
                      	 samples[i] = sfxr.synthSample();
                       }
+            	  	}
 //            	  }
 //            	  else
 //            	  {
@@ -380,6 +403,7 @@ public class SFXR extends Activity implements OnTouchListener {
         if(keyCode == KeyEvent.KEYCODE_BACK) {
         	if ( vf.getDisplayedChild() == 1 )
         	{
+        		((Button)findViewById(R.id.btnEdit)).setText("EDIT");
         		vf.setInAnimation(AnimationUtils.loadAnimation(this,R.anim.slide_in_left));
     	        vf.setOutAnimation(AnimationUtils.loadAnimation(this,R.anim.slide_out_right));
     			vf.setDisplayedChild(0);
@@ -414,20 +438,7 @@ public class SFXR extends Activity implements OnTouchListener {
         	*/
         	//superSampling = !superSampling;
 
-        	switch( vf.getDisplayedChild() )
-        	{
-        		case 0:
-        			updateBars();
-        			vf.setInAnimation(AnimationUtils.loadAnimation(this,R.anim.slide_in_right));
-        	        vf.setOutAnimation(AnimationUtils.loadAnimation(this,R.anim.slide_out_left));
-        			vf.setDisplayedChild(1);
-        			break;
-        		case 1:
-        			vf.setInAnimation(AnimationUtils.loadAnimation(this,R.anim.slide_in_left));
-        	        vf.setOutAnimation(AnimationUtils.loadAnimation(this,R.anim.slide_out_right));
-        			vf.setDisplayedChild(0);
-        			break;
-        	}
+        	switchScreens();
         	
             return true;
         }
@@ -540,10 +551,50 @@ public class SFXR extends Activity implements OnTouchListener {
     			case R.id.btnRnd:
     				random();
     				break;
+    			case R.id.btnEdit:
+    				switchScreens();
+    				break;
     		}
     	}
     	
     	return false;
+    }
+    
+    private void switchScreens()
+    {
+    	Button b = (Button) findViewById(R.id.btnEdit);
+    	switch( vf.getDisplayedChild() )
+    	{
+    		case 0:
+    			updateBars();
+    			b.setText("BACK");
+    			vf.setInAnimation(AnimationUtils.loadAnimation(this,R.anim.slide_in_right));
+    	        vf.setOutAnimation(AnimationUtils.loadAnimation(this,R.anim.slide_out_left));
+    			vf.setDisplayedChild(1);
+    			break;
+    		case 1:
+    			b.setText("EDIT");
+    			vf.setInAnimation(AnimationUtils.loadAnimation(this,R.anim.slide_in_left));
+    	        vf.setOutAnimation(AnimationUtils.loadAnimation(this,R.anim.slide_out_right));
+    			vf.setDisplayedChild(0);
+    			break;
+    	}
+    }
+    
+    private void saveToFile(MotionEvent event)
+    {
+    	if ( event.getAction() == MotionEvent.ACTION_UP ) {
+    		//Log.e("SFXR", "here i come !");
+    		//Toast.makeText(this, "check:" + event.toString(), Toast.LENGTH_SHORT ).show();
+
+    		rendering = true;
+    		pd = ProgressDialog.show( this,"","Rendering. Please wait...",true);
+    		
+    		RenderTask task = new RenderTask();
+    		task.execute(this);
+    		
+    	}
+		
     }
     
     private void replay()
@@ -600,7 +651,6 @@ public class SFXR extends Activity implements OnTouchListener {
     	public ParamLayout(Context context) {
     		super(context);
     		mContext = context;
-    		// TODO Auto-generated constructor stub
     		init();
     	}
 
@@ -611,7 +661,6 @@ public class SFXR extends Activity implements OnTouchListener {
     	public ParamLayout(Context context, AttributeSet attrs) {
     		super(context, attrs);
     		mContext = context;
-    		// TODO Auto-generated constructor stub
     		init();
     	}
     	
@@ -700,9 +749,9 @@ public class SFXR extends Activity implements OnTouchListener {
      
        public AndroidAudioDevice( )
        {
-          int minSize =AudioTrack.getMinBufferSize( 44100, AudioFormat.CHANNEL_CONFIGURATION_MONO, AudioFormat.ENCODING_PCM_16BIT );        
+          int minSize = AudioTrack.getMinBufferSize( 44100, AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT );
           track = new AudioTrack( AudioManager.STREAM_MUSIC, 44100, 
-                                            AudioFormat.CHANNEL_CONFIGURATION_MONO, AudioFormat.ENCODING_PCM_16BIT, 
+                                            AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT, 
                                             minSize, AudioTrack.MODE_STREAM);
           track.play();        
        }	   
@@ -722,4 +771,182 @@ public class SFXR extends Activity implements OnTouchListener {
              buffer[i] = (short)(samples[i] * Short.MAX_VALUE);;
        }		
     }
+    
+    /**
+     * sub-class of AsyncTask
+     */
+    protected class RenderTask extends AsyncTask<Context, Integer, String>
+    {
+        // -- run intensive processes here
+        // -- notice that the datatype of the first param in the class definition matches the param passed to this method 
+        // -- and that the datatype of the last param in the class definition matches the return type of this mehtod
+                @Override
+                protected String doInBackground( Context... params ) 
+                {
+                        //-- on every iteration
+                        //-- runs a while loop that causes the thread to sleep for 50 milliseconds 
+                        //-- publishes the progress - calls the onProgressUpdate handler defined below
+                        //-- and increments the counter variable i by one
+                		//must_play = false;
+                		
+                    	sfxr.playing_sample = false;
+                		sfxr.resetSample(false);
+                    	sfxr.playing_sample = true;
+                		
+                		int dataSize = 180000;
+                		int realDataSize = 0;
+                		
+                		// collect sample data in arraylist before creating the file
+                		List<Short> samples = new ArrayList<Short>();
+                		try{
+	                		while( sfxr.playing_sample ) {
+	                			samples.add((short)(sfxr.synthSample()*32767) );
+	                			++realDataSize;
+	                		}
+	                		System.out.println( "_sfxr generated samples  : " + realDataSize );
+	                		dataSize = realDataSize*2;
+			                		
+		                }catch(Exception e)
+		        		{
+		        			//Toast.makeText(getApplicationContext(), "Error generating file...", Toast.LENGTH_SHORT).show();
+		        			System.out.println("_sfxr error : " + e.getMessage() );
+		        			return "error";
+		        		}
+                		
+                		// get current time for the filename
+                		long now = System.currentTimeMillis();
+                		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
+                		System.out.println( "_sfxr getting time  : " + date.format(now) );
+                		
+
+                		// create the file
+                		String filename = "sfxr-"+date.format(now)+".wav";
+                		System.out.println("_sfxr saving file");
+                		try{
+                		
+                			File folder = new File(Environment.getExternalStorageDirectory() + "/sfxr");
+                			if (!folder.exists()) folder.mkdir();
+                			
+	                		//File file = new File(Environment.getExternalStorageDirectory(), filename);
+	                		File file = new File(folder, filename);
+	                		DataOutputStream outFile = new DataOutputStream( new FileOutputStream(file) );
+	                		
+	                		// write the wav file per the wav file format
+	            			outFile.writeBytes("RIFF");					// 00 - RIFF
+	            			outFile.write(intToByteArray((int)dataSize+36), 0, 4);		// 04 - how big is the rest of this file?
+	            			//outFile.wri
+	            			outFile.writeBytes("WAVE");					// 08 - WAVE
+	            			outFile.writeBytes("fmt ");					// 12 - fmt 
+	            			outFile.write(intToByteArray(16), 0, 4);	// 16 - size of this chunk
+	            			outFile.write(shortToByteArray((short)1), 0, 2);		// 20 - what is the audio format? 1 for PCM = Pulse Code Modulation
+	            			outFile.write(shortToByteArray((short)1), 0, 2);	// 22 - mono or stereo? 1 or 2?  (or 5 or ???)
+	            			outFile.write(intToByteArray(44100), 0, 4);		// 24 - samples per second (numbers per second)
+	            			outFile.write(intToByteArray(88200), 0, 4);		// 28 - bytes per second
+	            			outFile.write(shortToByteArray((short)2), 0, 2);	// 32 - # of bytes in one sample, for all channels
+	            			outFile.write(shortToByteArray((short)16), 0, 2);	// 34 - how many bits in a sample(number)?  usually 16 or 24
+	            			outFile.writeBytes("data");					// 36 - data
+	            			outFile.write(intToByteArray((int)dataSize), 0, 4);		// 40 - how big is this data chunk
+	            			
+	                		//byte[] data = new byte[10300];
+	                		
+	            			System.out.println("_sfxr header written : "+realDataSize);
+	            			
+	                		for(int i = 0;i<realDataSize;i++){
+	                			outFile.write( shortToByteArray(samples.get(i)) );
+	                		}
+	                		/*
+	                		while( sfxr.playing_sample ) {
+	                			//data[i] = 0;
+	                			//wav.myData[i] = 0;//sfxr.synthSample();
+	                			//float
+	                			//System.out.println("SFXR wave : "+realDataSize);
+	                			outFile.write(shortToByteArray((short)(sfxr.synthSample()*32767)),0,2);
+	                			//i+=2;
+	                			//if ( sfxr.playing_sample ) 
+	                			realDataSize+=2;
+	                		}
+	                		*/
+	                		
+	                		System.out.println("_sfxr file saved : "+realDataSize);
+	                		
+	            			outFile.flush();
+	            			outFile.close();
+	            			outFile = null;
+	            			file = null;
+	            			folder = null;
+                		
+	            			
+	            			//Toast.makeText(getApplicationContext(), "File : " + filename + "saved to SD card", Toast.LENGTH_SHORT).show();
+                		}catch(Exception e)
+                		{
+                			Toast.makeText(getApplicationContext(), "Error saving file...", Toast.LENGTH_SHORT).show();
+                			System.out.println("_sfxr error : " + e.getMessage() );
+                			return "error";
+                		}
+
+                		return "ok";
+                		
+                }
+                
+            	// returns a byte array of length 4
+            	private byte[] intToByteArray(int i)
+            	{
+            		byte[] b = new byte[4];
+            		b[0] = (byte) (i & 0x00FF);
+            		b[1] = (byte) ((i >> 8) & 0x000000FF);
+            		b[2] = (byte) ((i >> 16) & 0x000000FF);
+            		b[3] = (byte) ((i >> 24) & 0x000000FF);
+            		return b;
+            	}
+
+            	// convert a short to a byte array
+            	public byte[] shortToByteArray(short data)
+            	{
+            		return new byte[]{(byte)(data & 0xff),(byte)((data >>> 8) & 0xff)};
+            	}
+                
+                // -- gets called just before thread begins
+                @Override
+                protected void onPreExecute() 
+                {
+                        //Log.i( "makemachine", "onPreExecute()" );
+                        super.onPreExecute();
+                        
+                }
+                
+                // -- called from the publish progress 
+                // -- notice that the datatype of the second param gets passed to this method
+                @Override
+                protected void onProgressUpdate(Integer... values) 
+                {
+                        super.onProgressUpdate(values);
+                        //pd.setProgress(values[0]);
+                        //Log.i( "makemachine", "onProgressUpdate(): " +  String.valueOf( values[0] ) );
+                        /*
+                        _percentField.setText( ( values[0] * 2 ) + "%");
+                        _percentField.setTextSize( values[0] );
+                        */
+                }
+                
+                // -- called if the cancel button is pressed
+                @Override
+                protected void onCancelled()
+                {
+                        super.onCancelled();
+                }
+
+                // -- called as soon as doInBackground method completes
+                // -- notice that the third param gets passed to this method
+                @Override
+                protected void onPostExecute( String result ) 
+                {
+                        super.onPostExecute(result);
+                        pd.dismiss();
+                		rendering = false;
+                		
+                		Toast t = Toast.makeText(getApplicationContext(), "File saved to SD card", Toast.LENGTH_SHORT);
+                		t.show();
+                		
+                }
+    }    
 }
